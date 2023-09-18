@@ -17,6 +17,7 @@ indices.
 See pyscf/gto/moleintor.py file for the complete list of supported integrals.
 '''
 
+
 import numpy
 from pyscf import gto, scf
 
@@ -42,7 +43,7 @@ t1 = mol.intor('int1e_ipkin' )  # (3,N,N) array, 3 for x,y,z components
 v1 = mol.intor('int1e_ipnuc' )  # (3,N,N) array, 3 for x,y,z components
 
 mol.set_common_origin([0,0,0])  # Set gauge origin before computing dipole integrals
-print('Dipole %s' % numpy.einsum('xij,ji->x', mol.intor('int1e_r'), dm))
+print(f"Dipole {numpy.einsum('xij,ji->x', mol.intor('int1e_r'), dm)}")
 
 #
 # AO overlap between two molecules
@@ -106,7 +107,7 @@ for i in range(mol.nbas):
                 pk += dk
             pj += dj
         pi += di
-print('integral shape %s' % str(eri1.shape))
+print(f'integral shape {str(eri1.shape)}')
 # This integral block can be generated using mol.intor
 eri1 = mol.intor('int2e_ip1_sph', shls_slice=(bas_start, bas_end,
                                               0, mol.nbas,
@@ -127,8 +128,8 @@ for i in range(mol.nbas):
     nc = mol.bas_nctr(i)
     dims.append((l * 2 + 1) * nc)
 nao_i = sum(dims[2:5])
-nao_j = sum(dims[0:2])
-nao_k = sum(dims[0:4])
+nao_j = sum(dims[:2])
+nao_k = sum(dims[:4])
 nao_l = sum(dims[1:3])
 sub_eri = numpy.empty((nao_i,nao_j,nao_k,nao_l))
 pi = 0

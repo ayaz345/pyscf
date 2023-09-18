@@ -23,12 +23,13 @@ myhf.kernel()
 
 orb = myhf.mo_coeff
 ftmp = tempfile.NamedTemporaryFile()
-print('MO integrals are saved in file  %s  under dataset "eri_mo"' % ftmp.name)
+print(f'MO integrals are saved in file  {ftmp.name}  under dataset "eri_mo"')
 ao2mo.kernel(mol, orb, ftmp.name)
 
 # Read integrals via h5py module
 with h5py.File(ftmp.name) as f:
     eri_4fold = f['eri_mo']
-    print('MO integrals (ij|kl) with 4-fold symmetry i>=j, k>=l have shape %s' %
-          str(eri_4fold.shape))
+    print(
+        f'MO integrals (ij|kl) with 4-fold symmetry i>=j, k>=l have shape {str(eri_4fold.shape)}'
+    )
 

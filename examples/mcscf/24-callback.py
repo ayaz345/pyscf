@@ -24,8 +24,8 @@ mf.kernel()
 mc = mcscf.CASSCF(mf, 6, (4,2))
 def save_mo_coeff(envs):
     imacro = envs['imacro']
-    imicro = envs['imicro']
     if imacro % 3 == 2:
+        imicro = envs['imicro']
         fname = 'mcscf-mo-%d-%d.npy' % (imacro+1, imicro+1)
         print('Save MO of step %d-%d in file %s' % (imacro+1, imicro+1, fname))
         numpy.save(fname, envs['mo_coeff'])

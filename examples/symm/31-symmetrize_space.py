@@ -43,9 +43,9 @@ except ValueError:
 nocc = mol.nelectron // 2
 occ_orb = symm.symmetrize_space(mol, mo[:,:nocc])
 irrep_ids = symm.label_orb_symm(mol, mol.irrep_name, mol.symm_orb, occ_orb)
-print('Occupied orbital symmetry: %s' % irrep_ids)
+print(f'Occupied orbital symmetry: {irrep_ids}')
 
 virt_orb = symm.symmetrize_space(mol, mo[:,nocc:])
 irrep_ids = symm.label_orb_symm(mol, mol.irrep_name, mol.symm_orb, virt_orb)
-print('Virtual orbital symmetry: %s' % irrep_ids)
+print(f'Virtual orbital symmetry: {irrep_ids}')
 

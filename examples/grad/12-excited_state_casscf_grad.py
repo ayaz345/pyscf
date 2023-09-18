@@ -7,6 +7,7 @@
 Analytical nuclear gradients of CASSCF excited state.
 '''
 
+
 from pyscf import gto
 from pyscf import scf
 from pyscf import mcscf
@@ -82,7 +83,7 @@ mol = gto.M(
 mol.build ()
 mf = scf.RHF (mol).run ()
 from pyscf import fci
-fcisolvers = [fci.solver (mol, symm=True) for i in (1,2)]
+fcisolvers = [fci.solver (mol, symm=True) for _ in (1, 2)]
 fcisolvers[0].nroots = fcisolvers[1].nroots = 2
 fcisolvers[0].wfnsym = 'A1'
 fcisolvers[1].wfnsym = 'B2'

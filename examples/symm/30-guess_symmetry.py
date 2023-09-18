@@ -44,7 +44,7 @@ mf.kernel()
 symm.geom.TOLERANCE = .1
 mol.symmetry = True
 mol.build(False, False)
-print('Pseudo symmetry %s' % mol.groupname)
+print(f'Pseudo symmetry {mol.groupname}')
 
 # Call mol.build again to avoid the atom coordinates changed
 mol.symmetry = mol.groupname

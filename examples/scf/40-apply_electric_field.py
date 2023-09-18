@@ -62,8 +62,8 @@ moldenfile = 'bz-homo.molden'
 tools.molden.from_mo(mol, moldenfile, numpy.array(mos).T)
 
 jmol_script = 'bz-homo.spt'
-fspt = open(jmol_script,'w')
-fspt.write('''
+with open(jmol_script,'w') as fspt:
+    fspt.write('''
 initialize;
 set background [xffffff];
 set frank off
@@ -73,7 +73,7 @@ set bondTolerance 0.5;
 set forceAutoBond false;
 load %s
 ''' % moldenfile)
-fspt.write('''
+    fspt.write('''
 zoom 130;
 rotate -20 z
 rotate -60 x
@@ -84,7 +84,6 @@ MO COLOR translucent 0.25;
 MO fill noDots noMesh;
 MO titleformat "";
 ''')
-for i in range(N):
-    fspt.write('MO %d cutoff 0.025;\n' % (i+1))
-    fspt.write('write IMAGE 400 400 PNG 90 "bz-homo-%02d.png";\n' % (i+1))
-fspt.close()
+    for i in range(N):
+        fspt.write('MO %d cutoff 0.025;\n' % (i+1))
+        fspt.write('write IMAGE 400 400 PNG 90 "bz-homo-%02d.png";\n' % (i+1))

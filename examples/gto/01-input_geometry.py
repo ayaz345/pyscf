@@ -12,6 +12,7 @@ PySCF supports input molecule geometry in
 5. Read geometry from a file
 '''
 
+
 import numpy
 from pyscf import gto
 
@@ -78,12 +79,8 @@ mol.atom = ['8 1 1 1.5',
 # geometry, e.g. import geometry from external module, parsing geometry
 # database.  Following are examples to generate geometry using python snippet
 #
-mol.atom = ['O 1 1 1.5']
-mol.atom.extend([['H', (i, i, i)] for i in range(1,5)])
-
-mol.atom = 'O 1 1 1.5;'
-mol.atom += ';'.join(['H '+(' %f'%i)*3 for i in range(1,5)])
-
+mol.atom = ['O 1 1 1.5', *[['H', (i, i, i)] for i in range(1,5)]]
+mol.atom = 'O 1 1 1.5;' + ';'.join(['H '+(' %f'%i)*3 for i in range(1,5)])
 mol.build()
 #
 # No matter which format or symbol used for the input, function Mole.build()

@@ -7,6 +7,7 @@
 CISD density matrix
 '''
 
+
 import numpy
 from pyscf import gto, scf, ci, ao2mo
 
@@ -32,7 +33,7 @@ E = numpy.einsum('pq,qp', h1, dm1)
 # Note dm2 is transposed to simplify its contraction to integrals
 E+= numpy.einsum('pqrs,pqrs', eri, dm2) * .5
 E+= mol.energy_nuc()
-print('E(CCSD) = %s, reference %s' % (E, myci.e_tot))
+print(f'E(CCSD) = {E}, reference {myci.e_tot}')
 
 #
 # CISD 1-particle transition density matrix

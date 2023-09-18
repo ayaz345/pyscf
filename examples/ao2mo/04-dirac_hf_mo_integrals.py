@@ -4,6 +4,7 @@
 MO integral transformation for spinor integrals
 '''
 
+
 import h5py
 from pyscf import gto
 from pyscf import scf
@@ -27,6 +28,7 @@ nNeg = nmo // 2
 mo = mf.mo_coeff[:n2c,nNeg:]
 r_outcore.general(mol, (mo, mo, mo, mo), 'llll.h5', intor='int2e_spinor')
 with h5py.File('llll.h5', 'r') as f:
-    print('Number of DHF molecular orbitals %s' % (nmo//2))
-    print('MO integrals for large component orbitals. Shape = %s'
-          % str(f['eri_mo'].shape))
+    print(f'Number of DHF molecular orbitals {nmo // 2}')
+    print(
+        f"MO integrals for large component orbitals. Shape = {str(f['eri_mo'].shape)}"
+    )

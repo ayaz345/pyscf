@@ -19,6 +19,7 @@
 
  overwite keys get_occ of <class 'pyscf.scf.uks.UKS'> or <class 'pyscf.scf.roks.ROKS'>
 '''
+
 import numpy
 from pyscf import gto, scf, dft
 
@@ -100,8 +101,12 @@ d.scf(dm_ro)
 # Summary
 print('----------------UKS calculation----------------')
 print('Excitation energy(UKS): %.3g eV' % ((b.e_tot - a.e_tot)*27.211))
-print('Alpha electron occpation pattern of excited state(UKS) : %s' %(b.mo_occ[0]))
-print(' Beta electron occpation pattern of excited state(UKS) : %s' %(b.mo_occ[1]))
+print(
+    f'Alpha electron occpation pattern of excited state(UKS) : {b.mo_occ[0]}'
+)
+print(
+    f' Beta electron occpation pattern of excited state(UKS) : {b.mo_occ[1]}'
+)
 print('----------------ROKS calculation----------------')
 print('Excitation energy(ROKS): %.3g eV' % ((d.e_tot - c.e_tot)*27.211))
-print('Electron occpation pattern of excited state(ROKS) : %s' %(d.mo_occ))
+print(f'Electron occpation pattern of excited state(ROKS) : {d.mo_occ}')

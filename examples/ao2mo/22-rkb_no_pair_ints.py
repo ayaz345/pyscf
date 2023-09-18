@@ -61,8 +61,8 @@ no_pair_ovov(mol, mf.mo_coeff, 'dhf_ovov.h5')
 with h5py.File('dhf_ovov.h5', 'r') as f:
     nocc = mol.nelectron
     nvir = mol.nao * 2 - nocc
-    print('Number of DHF occupied orbitals %s' % nocc)
-    print('Number of DHF virtual orbitals in positive states %s' % nvir)
-    print('No-pair MO integrals (ov|ov) have shape %s' % str(f['dhf_ovov'].shape))
+    print(f'Number of DHF occupied orbitals {nocc}')
+    print(f'Number of DHF virtual orbitals in positive states {nvir}')
+    print(f"No-pair MO integrals (ov|ov) have shape {str(f['dhf_ovov'].shape)}")
 
 

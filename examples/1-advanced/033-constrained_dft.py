@@ -51,14 +51,10 @@ def get_localized_orbitals(mf, lo_method, mo=None):
         mol = mf.mol
         s1e = mf.get_ovlp()
 
-        if lo_method.lower() == 'lowdin' or lo_method.lower() == 'meta_lowdin':
+        if lo_method.lower() in ['lowdin', 'meta_lowdin']:
             C = lo.orth_ao(mf, 'meta_lowdin', s=s1e)
             C_inv = np.dot(C.conj().T,s1e)
-            if isinstance(mf, scf.hf.RHF):
-                C_inv_spin = C_inv
-            else:
-                C_inv_spin = np.array([C_inv]*2)
-
+            C_inv_spin = C_inv if isinstance(mf, scf.hf.RHF) else np.array([C_inv]*2)
         elif lo_method == 'iao':
             s1e = mf.get_ovlp()
             pmol = mf.mol.copy()
@@ -84,38 +80,32 @@ def get_localized_orbitals(mf, lo_method, mo=None):
         elif lo_method == 'nao':
             C = lo.orth_ao(mf, 'nao')
             C_inv = np.dot(C.conj().T,s1e)
-            if isinstance(mf, scf.hf.RHF):
-                C_inv_spin = C_inv
-            else:
-                C_inv_spin = np.array([C_inv]*2)
-
+            C_inv_spin = C_inv if isinstance(mf, scf.hf.RHF) else np.array([C_inv]*2)
         else:
             raise NotImplementedError("UNDEFINED LOCAL ORBITAL TYPE, EXIT...")
-
-        mo_lo = np.einsum('...jk,...kl->...jl', C_inv_spin, mo)
-        return C_inv_spin, mo_lo
 
     else:
         cell = mf.cell
         s1e = mf.get_ovlp()
 
-        if lo_method.lower() == 'lowdin' or lo_method.lower() == 'meta_lowdin':
-            nkpt = len(mf.kpts)
-            C_arr = []
-            C_inv_arr = []
-            for i in range(nkpt):
-                C_curr = lo.orth_ao(mf, 'meta_lowdin',s=s1e[i])
-                C_inv_arr.append(np.dot(C_curr.conj().T,s1e[i]))
-            C_inv_arr = np.array(C_inv_arr)
-            if isinstance(mf, scf.hf.RHF):
-                C_inv_spin = C_inv_arr
-            else:
-                C_inv_spin = np.array([C_inv_arr]*2)
-        else:
+        if lo_method.lower() not in ['lowdin', 'meta_lowdin']:
             raise NotImplementedError("CONSTRUCTING...EXIT")
 
-        mo_lo = np.einsum('...jk,...kl->...jl', C_inv_spin, mo)
-        return C_inv_spin, mo_lo
+        nkpt = len(mf.kpts)
+        C_arr = []
+        C_inv_arr = []
+        for i in range(nkpt):
+            C_curr = lo.orth_ao(mf, 'meta_lowdin',s=s1e[i])
+            C_inv_arr.append(np.dot(C_curr.conj().T,s1e[i]))
+        C_inv_arr = np.array(C_inv_arr)
+        C_inv_spin = (
+            C_inv_arr
+            if isinstance(mf, scf.hf.RHF)
+            else np.array([C_inv_arr] * 2)
+        )
+
+    mo_lo = np.einsum('...jk,...kl->...jl', C_inv_spin, mo)
+    return C_inv_spin, mo_lo
 
 def pop_analysis(mf, mo_on_loc_ao, disp=True, full_dm=False):
     '''
@@ -136,10 +126,7 @@ def pop_analysis(mf, mo_on_loc_ao, disp=True, full_dm=False):
     if disp:
         mf.mulliken_pop(mf.mol, dm_lo, np.eye(mf.mol.nao_nr()))
 
-    if full_dm:
-        return dm_lo
-    else:
-        return np.einsum('...ii->...i', dm_lo)
+    return dm_lo if full_dm else np.einsum('...ii->...i', dm_lo)
 
 
 # get the matrix which should be added to the fock matrix, due to the lagrange multiplier V_lagr (in separate format)
@@ -169,10 +156,7 @@ def get_fock_add_cdft(constraints, V, C_ao2lo_inv):
         V_a = np.einsum('kip,i,kiq->kpq', C_ao2lo_a[:,sites_a].conj(), V_lagr[0], C_ao2lo_a[:,sites_a])
         V_b = np.einsum('kip,i,kiq->kpq', C_ao2lo_b[:,sites_b].conj(), V_lagr[1], C_ao2lo_b[:,sites_b])
 
-    if isinstance(mf, scf.hf.RHF):
-        return V_a + V_b
-    else:
-        return np.array((V_a, V_b))
+    return V_a + V_b if isinstance(mf, scf.hf.RHF) else np.array((V_a, V_b))
 
 
 def W_cdft(mf, constraints, V_c, orb_pop):
@@ -266,11 +250,7 @@ def cdft(mf, constraints, V_0=None, lo_method='lowdin', alpha=0.2, tol=1e-5,
             return fock_0 + fock_add
 
         cdft_conv_flag = False
-        if cycle < 10:
-            inner_max_cycle = 20
-        else:
-            inner_max_cycle = 50
-
+        inner_max_cycle = 20 if cycle < 10 else 50
         if verbose > 3:
             print("\nCDFT INNER LOOP:")
 
@@ -278,7 +258,7 @@ def cdft(mf, constraints, V_0=None, lo_method='lowdin', alpha=0.2, tol=1e-5,
         fock_add = get_fock_add_cdft(constraints, V_0, C_inv)
         fock = fock_0 + fock_add #ZHC
 
-        if diis_pos == 'pre' or diis_pos == 'both':
+        if diis_pos in ['pre', 'both']:
             for it in range(inner_max_cycle): # TO BE MODIFIED
                 fock_add = get_fock_add_cdft(constraints, V_0, C_inv)
                 fock = fock_0 + fock_add #ZHC
@@ -304,11 +284,7 @@ def cdft(mf, constraints, V_0=None, lo_method='lowdin', alpha=0.2, tol=1e-5,
                 deltaV = get_newton_step_aug_hess(jacob,hess)
                 #deltaV = np.linalg.solve (hess, -jacob)
 
-                if it < 5 :
-                    stp = min(0.05, alpha*0.1)
-                else:
-                    stp = alpha
-
+                stp = min(0.05, alpha*0.1) if it < 5 else alpha
                 V = V_0 + deltaV * stp
                 g_norm = np.linalg.norm(jacob)
                 if verbose > 3:
@@ -330,7 +306,7 @@ def cdft(mf, constraints, V_0=None, lo_method='lowdin', alpha=0.2, tol=1e-5,
             else:
                 print("\nWARN: Unknown CDFT DIIS type, NO DIIS IS USED!!!\n")
 
-        if diis_pos == 'post' or diis_pos == 'both':
+        if diis_pos in ['post', 'both']:
             cdft_conv_flag = False
             fock_0 = fock - fock_add
             for it in range(inner_max_cycle): # TO BE MODIFIED
@@ -356,11 +332,7 @@ def cdft(mf, constraints, V_0=None, lo_method='lowdin', alpha=0.2, tol=1e-5,
                 hess = hess_cdft(mf, constraints, V_0, mo_on_loc_ao)
                 deltaV = np.linalg.solve (hess, -jacob)
 
-                if it < 5 :
-                    stp = min(0.05, alpha*0.1)
-                else:
-                    stp = alpha
-
+                stp = min(0.05, alpha*0.1) if it < 5 else alpha
                 V = V_0 + deltaV * stp
                 g_norm = np.linalg.norm(jacob)
                 if verbose > 3:
@@ -433,8 +405,8 @@ class Constraints(object):
 
     def site_to_constraints_transform_matrix(self):
         sites_a, sites_b = self.unique_sites()
-        map_sites_a = dict(((v,k) for k,v in enumerate(sites_a)))
-        map_sites_b = dict(((v,k) for k,v in enumerate(sites_b)))
+        map_sites_a = {v: k for k,v in enumerate(sites_a)}
+        map_sites_b = {v: k for k,v in enumerate(sites_b)}
 
         n_constraints = self.get_n_constraints()
         t_a = np.zeros((sites_a.size, n_constraints))
@@ -479,16 +451,18 @@ def get_newton_step_aug_hess(jac,hess):
     ah[1:,1:] = hess
 
     eigval, eigvec = la.eigh(ah)
-    idx = None
-    for i in xrange(len(eigvec)):
-        if abs(eigvec[0,i]) > 0.1 and eigval[i] > 0.0:
-            idx = i
-            break
+    idx = next(
+        (
+            i
+            for i in xrange(len(eigvec))
+            if abs(eigvec[0, i]) > 0.1 and eigval[i] > 0.0
+        ),
+        None,
+    )
     if idx is None:
         print("WARNING: ALL EIGENVALUESS in AUG-HESSIAN are NEGATIVE!!! ")
         return np.zeros_like(jac)
-    deltax = eigvec[1:,idx] / eigvec[0,idx]
-    return deltax
+    return eigvec[1:,idx] / eigvec[0,idx]
 
 
 if __name__ == '__main__':

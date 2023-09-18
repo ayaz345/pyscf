@@ -81,11 +81,7 @@ def dmet_cas(mc, dm, implst):
     e, u = scipy.linalg.eigh(focke)
     moext = numpy.dot(moext, u)
 
-    #
-    # Initial guess
-    #
-    mo_init = numpy.hstack((mocore, mocas, moext))
-    return mo_init
+    return numpy.hstack((mocore, mocas, moext))
 
 
 

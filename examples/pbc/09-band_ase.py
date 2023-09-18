@@ -71,7 +71,9 @@ for n in range(nbands):
 for p in sp_points:
     plt.plot([p, p], [emin, emax], 'k-')
 plt.plot([0, sp_points[-1]], [0, 0], 'k-')
-plt.xticks(sp_points, ['$%s$' % n for n in ['L', r'\Gamma', 'X', 'W', 'K', r'\Gamma']])
+plt.xticks(
+    sp_points, [f'${n}$' for n in ['L', r'\Gamma', 'X', 'W', 'K', r'\Gamma']]
+)
 plt.axis(xmin=0, xmax=sp_points[-1], ymin=emin, ymax=emax)
 plt.xlabel('k-vector')
 

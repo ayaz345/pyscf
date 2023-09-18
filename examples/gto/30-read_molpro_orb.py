@@ -36,7 +36,7 @@ dat = np.array([float(x) for x in dat.split(',')[:-1]])  # [:-1] to remove last 
 dims = [7,3,3,1,7,3,3,1]  # orbitals in each irrep
 off = 0
 molpro_mo = []
-for i, nd in enumerate(dims):
+for nd in dims:
     molpro_mo.append(dat[off:off+nd**2].reshape(nd,nd))
     off += nd**2
 mo = []

@@ -26,8 +26,7 @@ def diagonalize(a, b, nroots=5):
     b = b.reshape(nocc*nvir,nocc*nvir)
     e = numpy.linalg.eig(numpy.bmat([[a        , b       ],
                                      [-b.conj(),-a.conj()]]))[0]
-    lowest_e = numpy.sort(e[e > 0])[:nroots]
-    return lowest_e
+    return numpy.sort(e[e > 0])[:nroots]
 mf = scf.RHF(mol).run()
 a, b = tddft.TDHF(mf).get_ab()
 print('Direct diagoanlization:', diagonalize(a, b))
@@ -63,8 +62,7 @@ def diagonalize(a, b, nroots=4):
                     [ b_ab.T, b_bb]])
     e = numpy.linalg.eig(numpy.bmat([[a        , b       ],
                                      [-b.conj(),-a.conj()]]))[0]
-    lowest_e = numpy.sort(e[e.real > 0].real)[:nroots]
-    return lowest_e
+    return numpy.sort(e[e.real > 0].real)[:nroots]
 
 mol.spin = 2
 mf = scf.UHF(mol).run()

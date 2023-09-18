@@ -5,6 +5,7 @@ Access AO integrals in PBC code
 '''
 
 
+
 from pyscf.pbc import gto, df
 import numpy
 
@@ -92,10 +93,11 @@ mydf = df.DF(cell, kpts=kpts)
 eri_3d_kpts = []
 for i, kpti in enumerate(kpts):
     eri_3d_kpts.append([])
-    for j, kptj in enumerate(kpts):
-        eri_3d = []
-        for LpqR, LpqI, sign in mydf.sr_loop([kpti,kptj], compact=False):
-            eri_3d.append(LpqR+LpqI*1j)
+    for kptj in kpts:
+        eri_3d = [
+            LpqR + LpqI * 1j
+            for LpqR, LpqI, sign in mydf.sr_loop([kpti, kptj], compact=False)
+        ]
         eri_3d = numpy.vstack(eri_3d).reshape(-1,nao,nao)
         eri_3d_kpts[i].append(eri_3d)
 # Test 2-e integrals
@@ -115,7 +117,7 @@ mydf = df.FFTDF(cell, kpts=kpts)
 Lpq_kpts = []
 for i, kpti in enumerate(kpts):
     Lpq_kpts.append([])
-    for j, kptj in enumerate(kpts):
+    for kptj in kpts:
         q = kptj - kpti
         coulG = tools.get_coulG(cell, q)
         ngrids = len(coulG)

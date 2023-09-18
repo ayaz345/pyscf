@@ -10,6 +10,7 @@ calculations.  The time-consuming DF integral generation can be done once and
 reused many times.
 '''
 
+
 import tempfile
 from pyscf import gto, scf, df
 from pyscf.pbc import gto as pgto
@@ -17,7 +18,7 @@ from pyscf.pbc import dft as pdft
 
 tmpf = tempfile.NamedTemporaryFile()
 file_to_save_df_ints = tmpf.name
-print('DF integral is saved in %s' % file_to_save_df_ints)
+print(f'DF integral is saved in {file_to_save_df_ints}')
 
 #
 # Save the density fitting integrals in a file.

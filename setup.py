@@ -51,7 +51,7 @@ PLATFORMS        = ['Linux', 'Mac OS-X', 'Unix']
 def get_version():
     topdir = os.path.abspath(os.path.join(__file__, '..'))
     with open(os.path.join(topdir, 'pyscf', '__init__.py'), 'r') as f:
-        for line in f.readlines():
+        for line in f:
             if line.startswith('__version__'):
                 delim = '"' if '"' in line else "'"
                 return line.split(delim)[1]
@@ -88,8 +88,7 @@ class CMakeBuildExt(build_ext):
         self.announce('Configuring extensions', level=3)
         src_dir = os.path.abspath(os.path.join(__file__, '..', 'pyscf', 'lib'))
         cmd = ['cmake', f'-S{src_dir}', f'-B{self.build_temp}']
-        configure_args = os.getenv('CMAKE_CONFIGURE_ARGS')
-        if configure_args:
+        if configure_args := os.getenv('CMAKE_CONFIGURE_ARGS'):
             cmd.extend(configure_args.split(' '))
         self.spawn(cmd)
 
@@ -97,8 +96,7 @@ class CMakeBuildExt(build_ext):
         # Do not use high level parallel compilation. OOM may be triggered
         # when compiling certain functionals in libxc.
         cmd = ['cmake', '--build', self.build_temp, '-j2']
-        build_args = os.getenv('CMAKE_BUILD_ARGS')
-        if build_args:
+        if build_args := os.getenv('CMAKE_BUILD_ARGS'):
             cmd.extend(build_args.split(' '))
         if self.dry_run:
             self.announce(' '.join(cmd))

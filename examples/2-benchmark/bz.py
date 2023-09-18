@@ -24,23 +24,23 @@ h   0.000000000000000 -2.509154418614532  0.000000000000000
     cpu0 = get_cpu_timings()
 
     mf = mol.RHF().run()
-    cpu0 = log.timer('C6H6 %s RHF'%bas, *cpu0)
+    cpu0 = log.timer(f'C6H6 {bas} RHF', *cpu0)
 
     mymp2 = mf.MP2().run()
-    cpu0 = log.timer('C6H6 %s MP2'%bas, *cpu0)
+    cpu0 = log.timer(f'C6H6 {bas} MP2', *cpu0)
 
     mymc = mf.CASSCF(6, 6)
     idx_2pz = mo_comps('2pz', mol, mf.mo_coeff).argsort()[-6:]
     mo = mymc.sort_mo(idx_2pz, base=0)
     mymc.kernel(mo)
-    cpu0 = log.timer('C6H6 %s CASSCF'%bas, *cpu0)
+    cpu0 = log.timer(f'C6H6 {bas} CASSCF', *cpu0)
 
     mycc = mf.CCSD().run()
-    cpu0 = log.timer('C6H6 %s CCSD'%bas, *cpu0)
+    cpu0 = log.timer(f'C6H6 {bas} CCSD', *cpu0)
 
     mf = mol.RKS().run(xc='b3lyp')
-    cpu0 = log.timer('C6H6 %s B3LYP'%bas, *cpu0)
+    cpu0 = log.timer(f'C6H6 {bas} B3LYP', *cpu0)
 
     mf = mf.density_fit().run()
-    cpu0 = log.timer('C6H6 %s density-fit RHF'%bas, *cpu0)
+    cpu0 = log.timer(f'C6H6 {bas} density-fit RHF', *cpu0)
 

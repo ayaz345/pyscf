@@ -30,7 +30,7 @@ mc = mcscf.CASSCF(mf, 8, 8)
 #
 def micro_cycle_scheduler(envs):
     max_micro = envs['casscf'].max_cycle_micro
-    if -.01 < envs['de'] and envs['de'] < 0:
+    if -0.01 < envs['de'] < 0:
         max_micro += int(abs(numpy.log10(-envs['de'])))
     return max_micro
 mc.micro_cycle_scheduler = micro_cycle_scheduler

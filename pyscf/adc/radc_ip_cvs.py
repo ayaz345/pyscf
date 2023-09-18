@@ -237,7 +237,6 @@ def get_diag(adc,M_ij=None,eris=None):
     e_occ = adc.mo_energy[:nocc]
     e_vir = adc.mo_energy[nocc:]
 
-    s1 = 0
     f1 = n_singles
     s2_ecc = f1
     f2_ecc = s2_ecc + n_doubles_ecc
@@ -257,7 +256,7 @@ def get_diag(adc,M_ij=None,eris=None):
 
     # Compute precond in h1-h1 block
     M_ij_diag = np.diagonal(M_ij)
-    diag[s1:f1] = M_ij_diag.copy()
+    diag[:f1] = M_ij_diag.copy()
 
     # Compute precond in 2p1h-2p1h block
     diag[s2_ecc:f2_ecc] = D_aij[:,:ncvs,:ncvs].reshape(-1)

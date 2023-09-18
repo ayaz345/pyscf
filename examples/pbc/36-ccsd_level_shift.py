@@ -7,6 +7,7 @@ this is one instance where the system will converge on a different ccsd solution
 depending on the initial guess and whether one is using a level shift.
 '''
 
+
 import numpy as np
 
 from pyscf.lib import finger
@@ -30,8 +31,8 @@ cell.spin = 0
 cell.charge = 0
 cell.basis = 'gth-szv'
 cell.pseudo = 'gth-pade'
-for i in range(len(cell.atom)):
-    cell.atom[i][1] = tuple(np.dot(np.array(cell.atom[i][1]),np.array(cell.a)))
+for item in cell.atom:
+    item[1] = tuple(np.dot(np.array(item[1]), np.array(cell.a)))
 cell.build()
 
 nmp = [2, 1, 1]

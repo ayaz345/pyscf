@@ -226,9 +226,7 @@ def loc_kernel(mol,mocoeff,ova,partition,tol,maxcycle,iop):
    return ierr,u
 
 def genAtomPartition(mol):
-   part = {}
-   for iatom in range(mol.natm):
-      part[iatom]=[]
+   part = {iatom: [] for iatom in range(mol.natm)}
    ncgto = 0
    for binfo in mol._bas:
       atom_id = binfo[0]
@@ -237,10 +235,7 @@ def genAtomPartition(mol):
       nbas = ncntr*(2*lang+1)
       part[atom_id]+=range(ncgto,ncgto+nbas)
       ncgto += nbas
-   partition = []
-   for iatom in range(mol.natm):
-      partition.append(part[iatom])
-   return partition
+   return [part[iatom] for iatom in range(mol.natm)]
 
 #
 # Molden Format
