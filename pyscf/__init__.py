@@ -35,14 +35,13 @@ to try out the package::
 
 '''
 
+
 __version__ = '2.3.0'
 
 import os
 import sys
 
-# Load modules which are developed as plugins of the namespace package
-PYSCF_EXT_PATH = os.getenv('PYSCF_EXT_PATH')
-if PYSCF_EXT_PATH:
+if PYSCF_EXT_PATH := os.getenv('PYSCF_EXT_PATH'):
     for p in PYSCF_EXT_PATH.split(':'):
         if os.path.isdir(p):
             submodules = os.listdir(p)
@@ -76,7 +75,7 @@ else:
     # taken, an explicit list of extended paths (using environment
     # PYSCF_EXT_PATH) is recommended.
     __path__ = __import__('pkgutil').extend_path(__path__, __name__)
-    if not all('/site-packages/' in p for p in __path__[1:]):
+    if any('/site-packages/' not in p for p in __path__[1:]):
         sys.stderr.write('pyscf plugins found in \n%s\n'
                          'When PYTHONPATH is set, it is recommended to load '
                          'these plugins through the environment variable '

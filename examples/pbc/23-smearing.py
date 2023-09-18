@@ -2,6 +2,7 @@
 
 '''Fermi-Dirac or Gaussian smearing for PBC SCF calculation'''
 
+
 import numpy
 from pyscf.pbc import gto, scf
 
@@ -23,9 +24,9 @@ nks = [2,1,1]
 mf = scf.KRHF(cell, cell.make_kpts(nks)).density_fit()
 mf = scf.addons.smearing_(mf, sigma=.1, method='fermi')
 mf.kernel()
-print('Entropy = %s' % mf.entropy)
-print('Free energy = %s' % mf.e_free)
-print('Zero temperature energy = %s' % ((mf.e_tot+mf.e_free)/2))
+print(f'Entropy = {mf.entropy}')
+print(f'Free energy = {mf.e_free}')
+print(f'Zero temperature energy = {(mf.e_tot + mf.e_free) / 2}')
 
 #
 # The smearing method and parameters can be modified at runtime

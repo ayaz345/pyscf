@@ -24,15 +24,14 @@ mol = gto.M(
 coords = []
 for ix in numpy.arange(-10, 10, 1.):
     for iy in numpy.arange(-10, 10, 1.):
-        for iz in numpy.arange(-10, 10, 1.):
-            coords.append((ix,iy,iz))
+        coords.extend((ix, iy, iz) for iz in numpy.arange(-10, 10, 1.))
 coords = numpy.array(coords)
 
 # AO value
 ao_value = numint.eval_ao(mol, coords)
-print('13 basis, 8000 xyz  %s' % str(ao_value.shape))
+print(f'13 basis, 8000 xyz  {str(ao_value.shape)}')
 
 # AO value and its gradients
 ao_value = numint.eval_ao(mol, coords, deriv=1)
-print('13 basis, 8000 xyz  %s' % str(ao_value.shape))
+print(f'13 basis, 8000 xyz  {str(ao_value.shape)}')
 

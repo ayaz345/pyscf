@@ -52,24 +52,24 @@ mpi_exe="/scratch/mbarbry/intel/intelpython2/bin/mpirun"
 siesta_path="/scratch/software/SIESTA/4.0b-485-intel-2015b/siesta"
 
 siesta_exe = mpi_exe + " -np {0} ".format(args_par.np) + siesta_path + " < siesta.fdf > siesta.out"
-for i, xyz in enumerate(xyz_range):
-    if xyz < 10:
-        num = "00000{0}".format(xyz)
-    elif xyz < 100:
-        num = "0000{0}".format(xyz)
-    elif xyz < 1000:
-        num = "000{0}".format(xyz)
-    elif xyz < 10000:
-        num = "00{0}".format(xyz)
-    else:
-        raise ValueError("xyz too large?? {0}".format(xyz))
-    path = "calc_" + num
-    os.chdir(path)
-    # Run siesta
-    subprocess.call("export OMP_NUM_THREADS=1", shell=True)
-    subprocess.call(siesta_exe, shell=True)
+for xyz in xyz_range:
+  if xyz < 10:
+      num = "00000{0}".format(xyz)
+  elif xyz < 100:
+      num = "0000{0}".format(xyz)
+  elif xyz < 1000:
+      num = "000{0}".format(xyz)
+  elif xyz < 10000:
+      num = "00{0}".format(xyz)
+  else:
+      raise ValueError("xyz too large?? {0}".format(xyz))
+  path = f"calc_{num}"
+  os.chdir(path)
+  # Run siesta
+  subprocess.call("export OMP_NUM_THREADS=1", shell=True)
+  subprocess.call(siesta_exe, shell=True)
 
-    # Run pyscf.nao
-    subprocess.call("export OMP_NUM_THREADS={0}".format(args_par.np), shell=True)
-    run_tddft_iter()
-    os.chdir("../")
+  # Run pyscf.nao
+  subprocess.call("export OMP_NUM_THREADS={0}".format(args_par.np), shell=True)
+  run_tddft_iter()
+  os.chdir("../")

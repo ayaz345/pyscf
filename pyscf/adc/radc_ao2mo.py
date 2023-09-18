@@ -161,11 +161,7 @@ def transform_integrals_outcore(myadc):
 
         for p in range(0,vir.shape[1],chnk_size):
 
-            if chnk_size < vir.shape[1] :
-                orb_slice = vir[:, p:p+chnk_size]
-            else:
-                orb_slice = vir[:, p:]
-
+            orb_slice = vir[:, p:p+chnk_size] if chnk_size < vir.shape[1] else vir[:, p:]
             with lib.H5TmpFile() as tmpf:
                 ao2mo.outcore.general(mol, (orb_slice, vir, vir, vir), tmpf,
                                       max_memory=avail_mem, ioblk_size=100, compact=False)

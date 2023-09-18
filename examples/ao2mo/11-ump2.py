@@ -35,8 +35,7 @@ def myump2(mol, mo_energy, mo_coeff, mo_occ):
     g = eri - eri.transpose(0,3,2,1)
     eov = eo.reshape(-1,1) - ev.reshape(-1)
     de = 1/(eov.reshape(-1,1) + eov.reshape(-1)).reshape(g.shape)
-    emp2 = .25 * numpy.einsum('iajb,iajb,iajb->', g, g, de)
-    return emp2
+    return .25 * numpy.einsum('iajb,iajb,iajb->', g, g, de)
 
 e = myump2(mol, m.mo_energy, m.mo_coeff, m.mo_occ)
 print('E(UMP2) = %.9g, ref = -0.346926068' % e)

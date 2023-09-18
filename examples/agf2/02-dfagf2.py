@@ -12,6 +12,7 @@ Default AGF2 corresponds to the AGF2(1,0) method outlined in the papers:
   - O. J. Backhouse and G. H. Booth, J. Chem. Theory Comput., 16, 6294 (2020).
 '''
 
+
 from pyscf import gto, scf, agf2
 import numpy as np
 from functools import reduce
@@ -48,4 +49,4 @@ for i in range(3):
     for j in range(mol.natm):
         dipole[i] += mol.atom_charge(j) * mol.atom_coord(j)[i]
 
-print('Dipole moment from AGF2: {} {} {}'.format(dipole[0], dipole[1], dipole[2]))
+print(f'Dipole moment from AGF2: {dipole[0]} {dipole[1]} {dipole[2]}')

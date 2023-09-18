@@ -38,7 +38,7 @@ from pyscf.adc import uadc_ea
 
 
 def ADC(mf, frozen=None, mo_coeff=None, mo_occ=None):
-    if not (frozen is None or frozen == 0):
+    if frozen is not None and frozen != 0:
         raise NotImplementedError
 
     if isinstance(mf, scf.uhf.UHF):
@@ -59,7 +59,7 @@ ADC.__doc__ = uadc.UADC.__doc__
 
 
 def UADC(mf, frozen=None, mo_coeff=None, mo_occ=None):
-    if not (frozen is None or frozen == 0):
+    if frozen is not None and frozen != 0:
         raise NotImplementedError
 
     from pyscf.soscf import newton_ah
@@ -74,7 +74,7 @@ UADC.__doc__ = uadc.UADC.__doc__
 def RADC(mf, frozen=None, mo_coeff=None, mo_occ=None):
     __doc__ = radc.RADC.__doc__
 
-    if not (frozen is None or frozen == 0):
+    if frozen is not None and frozen != 0:
         raise NotImplementedError
 
     from pyscf.soscf import newton_ah

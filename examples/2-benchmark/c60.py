@@ -13,7 +13,7 @@ for bas in ('6-31g**', 'cc-pVTZ'):
 
     cpu0 = get_cpu_timings()
     mf = pyscf.scf.fast_newton(mol.RHF())
-    cpu0 = log.timer('SOSCF/%s' % bas, *cpu0)
+    cpu0 = log.timer(f'SOSCF/{bas}', *cpu0)
 
     mf = mol.RHF().density_fit().run()
-    cpu0 = log.timer('density-fitting-HF/%s' % bas, *cpu0)
+    cpu0 = log.timer(f'density-fitting-HF/{bas}', *cpu0)

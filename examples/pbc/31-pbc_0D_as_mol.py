@@ -5,6 +5,7 @@ Convert back and forth between the molecule (open boundary) and the 0D PBC
 system.
 '''
 
+
 import numpy
 from pyscf import gto, scf
 from pyscf.pbc import gto as pbcgto
@@ -23,7 +24,7 @@ cell.build()
 mf = pbcscf.RHF(cell)
 mf.with_df = df.AFTDF(cell)
 mf.run()
-print('E(HF) with 0D PBC RHF calculation %s' % mf.e_tot)
+print(f'E(HF) with 0D PBC RHF calculation {mf.e_tot}')
 
 #
 # Convert cell to mol.
@@ -35,14 +36,14 @@ print('E(HF) with 0D PBC RHF calculation %s' % mf.e_tot)
 #
 mol = cell.to_mol()
 mf = scf.RHF(mol).run()
-print('E(HF) with molecular RHF calculation %s' % mf.e_tot)
+print(f'E(HF) with molecular RHF calculation {mf.e_tot}')
 
 # Cell and Mole have almost the same structure. If cell was fed to the
 # molecular functions, the code is able to handle the cell without any
 # errors. However, due to the different treatments of nuclear repulsion
 # energy, a small discrepancy will be found in the total energy.
 mf = scf.RHF(cell).run()
-print('E(HF) of molecular RHF with cell %s' % mf.e_tot)
+print(f'E(HF) of molecular RHF with cell {mf.e_tot}')
 
 #
 # Convert mol back to cell.
@@ -57,4 +58,4 @@ cell_0D = mol.view(pbcgto.Cell)
 cell_0D.a = numpy.eye(3)
 cell_0D.dimension = 0
 mf = pbcscf.RHF(cell).density_fit().run()
-print('E(HF) with 0D PBC RHF calculation %s' % mf.e_tot)
+print(f'E(HF) with 0D PBC RHF calculation {mf.e_tot}')

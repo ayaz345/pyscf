@@ -4,16 +4,14 @@ Reference result:
 converged SCF energy = -6.97030826215306
 E(KsymAdaptedRCCSD) = -7.08763343861385  E_corr = -0.1173251757710611
 '''
+
 import numpy as np
 from pyscf.pbc import gto, df, scf, cc
 
 a = 5.431020511
 xyz = np.array([[0, 0, 0], [0.25, 0.25, 0.25]]) * a
 
-atom = []
-for ix in xyz:
-    atom.append(['Si', list(ix)])
-
+atom = [['Si', list(ix)] for ix in xyz]
 cell = gto.Cell()
 cell.atom = atom
 cell.basis = 'gth-dzv'

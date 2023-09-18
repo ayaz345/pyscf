@@ -52,7 +52,9 @@ ao2mo.general(mol, orbs, eritmp.name, dataname='mp2_bz')#, verbose=5)
 eia = mf.mo_energy[:nocc,None] - mf.mo_energy[None,nocc:]
 f = h5py.File(eritmp.name, 'r')
 eri = f['mp2_bz']
-print('Note the shape of the transformed integrals (ij|kl) is %s.' % str(eri.shape))
+print(
+    f'Note the shape of the transformed integrals (ij|kl) is {str(eri.shape)}.'
+)
 print("It's a 2D array: the first index for compressed ij, the second index for compressed kl")
 
 emp2 = 0

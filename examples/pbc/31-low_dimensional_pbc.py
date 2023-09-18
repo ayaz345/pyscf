@@ -27,6 +27,7 @@ slabs. Large errors may be observed if the vacuum size is too small.
 See also the discussions in issue #558
 '''
 
+
 import numpy
 from pyscf import scf
 from pyscf.pbc import df as pdf
@@ -34,13 +35,6 @@ from pyscf.pbc import scf as pbchf
 from pyscf.pbc import gto as pbcgto
 from pyscf.pbc import tools
 
-##################################################
-#
-# 0D PBC (molecule)
-#
-##################################################
-
-e = []
 cell = pbcgto.Cell()
 cell.build(unit = 'B',
            a = numpy.eye(3),
@@ -51,8 +45,7 @@ cell.build(unit = 'B',
            basis = 'sto3g')
 mf = pbchf.RHF(cell)
 mf.with_df = pdf.AFTDF(cell)
-e.append(mf.kernel())
-
+e = [mf.kernel()]
 mf = pbchf.RHF(cell)
 mf.with_df = pdf.DF(cell)
 mf.with_df.auxbasis = 'weigend'

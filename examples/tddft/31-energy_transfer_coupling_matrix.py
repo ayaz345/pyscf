@@ -159,28 +159,28 @@ def eval_coupling(molA, molB, dmA, dmB, dm_ia, dm_jb, xc=None):
                        vhfopt=vhfopt, aosym='s1', hermi=0)
         cK = np.einsum('ia,ia->', vK, dm_ia)
 
-    if xc is None:  # CIS coupling term
+    if xc is None:
         return cJ * 2 - cK
 
-    else:
-        ni = numint.NumInt()
-        omega, alpha, hyb = ni.rsh_and_hybrid_coeff(xc)
+    ni = numint.NumInt()
+    omega, alpha, hyb = ni.rsh_and_hybrid_coeff(xc)
 
-        cK *= hyb
+    cK *= hyb
 
-        if omega > 1e-10:  # For range separated Coulomb
-            with lib.temporary_env(vhfopt._this.contents,
-                                   fprescreen=_vhf._fpointer('CVHFnrs8_vk_prescreen')):
-                with molAB.with_range_coulomb(omega):
-                    vK = jk.get_jk(molAB, dm_jb, 'ijkl,jk->il', shls_slice=shls_slice,
-                                   vhfopt=vhfopt, aosym='s1', hermi=0)
-                cK += np.einsum('ia,ia->', vK, dm_ia) * (alpha - hyb)
+    if omega > 1e-10:  # For range separated Coulomb
+        with lib.temporary_env(vhfopt._this.contents,
+                               fprescreen=_vhf._fpointer('CVHFnrs8_vk_prescreen')):
+            with molAB.with_range_coulomb(omega):
+                vK = jk.get_jk(molAB, dm_jb, 'ijkl,jk->il', shls_slice=shls_slice,
+                               vhfopt=vhfopt, aosym='s1', hermi=0)
+            cK += np.einsum('ia,ia->', vK, dm_ia) * (alpha - hyb)
 
     grids = dft.Grids(molAB)
     xctype = ni._xc_type(xc)
 
     def make_rhoA(ao, dmA):
         return ni.eval_rho(molA, ao[...,:naoA], dmA, xctype=xctype)
+
     def make_rhoB(ao, dmB):
         return ni.eval_rho(molB, ao[...,naoA:], dmB, xctype=xctype)
 

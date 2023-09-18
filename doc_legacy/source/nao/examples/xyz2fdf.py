@@ -6,32 +6,30 @@ import subprocess
 def write_geofdf(atoms, fname="geo.fdf"):
     from ase.data import chemical_symbols
 
-    f=open(fname, "w")
-    f.write("NumberOfAtoms   {0}\n".format(len(atoms)))
-    f.write("NumberOfSpecies {0}\n".format(len(set(atoms.numbers))))
-    f.write("\n")
-    f.write('%block ChemicalSpeciesLabel\n')
-    species_label = {}
-    for i, nb in enumerate(set(atoms.numbers)):
-        species_label[chemical_symbols[nb]] = i+1
-        f.write('  {0}  {1}  '.format(i+1, nb)+ chemical_symbols[nb]+'\n')
-    f.write("%endblock ChemicalSpeciesLabel\n")
-    f.write("\n")
+    with open(fname, "w") as f:
+        f.write("NumberOfAtoms   {0}\n".format(len(atoms)))
+        f.write("NumberOfSpecies {0}\n".format(len(set(atoms.numbers))))
+        f.write("\n")
+        f.write('%block ChemicalSpeciesLabel\n')
+        species_label = {}
+        for i, nb in enumerate(set(atoms.numbers)):
+            species_label[chemical_symbols[nb]] = i+1
+            f.write('  {0}  {1}  '.format(i+1, nb)+ chemical_symbols[nb]+'\n')
+        f.write("%endblock ChemicalSpeciesLabel\n")
+        f.write("\n")
 
-    f.write("AtomicCoordinatesFormat  Ang\n")
-    f.write("%block AtomicCoordinatesAndAtomicSpecies\n")
-    for ia, atm in enumerate(atoms):
-        pos = atm.position
-        f.write("{0:.6f}  {1:.6f}  {2:.6f}  {3} {4}  ".format(pos[0], pos[1], pos[2],
-            species_label[atm.symbol], ia+1) + atm.symbol + "\n")
+        f.write("AtomicCoordinatesFormat  Ang\n")
+        f.write("%block AtomicCoordinatesAndAtomicSpecies\n")
+        for ia, atm in enumerate(atoms):
+            pos = atm.position
+            f.write("{0:.6f}  {1:.6f}  {2:.6f}  {3} {4}  ".format(pos[0], pos[1], pos[2],
+                species_label[atm.symbol], ia+1) + atm.symbol + "\n")
 
-    f.write("%endblock AtomicCoordinatesAndAtomicSpecies")
-
-    f.close()
+        f.write("%endblock AtomicCoordinatesAndAtomicSpecies")
 
 xyz_range = np.arange(0, 5000, 25)
 
-for i, xyz in enumerate(xyz_range):
+for xyz in xyz_range:
     if xyz < 10:
         num = "00000{0}".format(xyz)
     elif xyz < 100:
@@ -43,9 +41,9 @@ for i, xyz in enumerate(xyz_range):
     else:
         raise ValueError("xyz too large?? {0}".format(xyz))
 
-    path = "calc_" + num
-    atoms = io.read("x"+num, format="xyz")
-    subprocess.call("mkdir " + path, shell=True)
-    write_geofdf(atoms, fname=path+"/geo.fdf")
-    subprocess.call("cp siesta_C60.fdf " + path, shell=True)
-    subprocess.call("cp C.psf " + path, shell=True)
+    path = f"calc_{num}"
+    atoms = io.read(f"x{num}", format="xyz")
+    subprocess.call(f"mkdir {path}", shell=True)
+    write_geofdf(atoms, fname=f"{path}/geo.fdf")
+    subprocess.call(f"cp siesta_C60.fdf {path}", shell=True)
+    subprocess.call(f"cp C.psf {path}", shell=True)

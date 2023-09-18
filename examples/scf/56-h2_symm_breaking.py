@@ -34,7 +34,7 @@ def init_guess_mixed(mol,mixing_parameter=numpy.pi/4):
         Density matrices, a list of 2D ndarrays for alpha and beta spins
     '''
     # opt: q, mixing parameter 0 < q < 2 pi
-    
+
     #based on init_guess_by_1e
     h1e = scf.hf.get_hcore(mol)
     s1e = scf.hf.get_ovlp(mol)
@@ -51,7 +51,7 @@ def init_guess_mixed(mol,mixing_parameter=numpy.pi/4):
 
     psi_homo=mo_coeff[:, homo_idx]
     psi_lumo=mo_coeff[:, lumo_idx]
-    
+
     Ca=numpy.zeros_like(mo_coeff)
     Cb=numpy.zeros_like(mo_coeff)
 
@@ -71,8 +71,7 @@ def init_guess_mixed(mol,mixing_parameter=numpy.pi/4):
         Ca[:,k]=mo_coeff[:,k]
         Cb[:,k]=mo_coeff[:,k]
 
-    dm =scf.UHF(mol).make_rdm1( (Ca,Cb), (mo_occ,mo_occ) )
-    return dm 
+    return scf.UHF(mol).make_rdm1( (Ca,Cb), (mo_occ,mo_occ) ) 
 
 
 for b in numpy.arange(0.7, 4.01, 0.1):

@@ -63,15 +63,14 @@ def lowdinPop(mol,coeff,ova,enorb,occ):
    return 0
 
 def scdm(coeff,ova,aux):
-   no = coeff.shape[1]	
+   no = coeff.shape[1]
    ova = reduce(numpy.dot,(coeff.T,ova,aux))
    # ova = no*nb
    q,r,piv = scipy.linalg.qr(ova,pivoting=True)
    bc = ova[:,piv[:no]]
    ova2 = numpy.dot(bc.T,bc)
    s12inv = lowdin(ova2)
-   cnew = reduce(numpy.dot,(coeff,bc,s12inv))
-   return cnew
+   return reduce(numpy.dot,(coeff,bc,s12inv))
 
 def dumpLMO(mol,fname,lmo):
    print 'Dump into '+fname+'.h5'

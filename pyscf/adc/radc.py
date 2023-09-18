@@ -72,7 +72,7 @@ def kernel(adc, nroots=1, guess=None, eris=None, verbose=None):
                         (adc.method, n, adc.E[n], adc.E[n]*27.2114))
         if adc.compute_properties:
             print_string += ("|  Spec factors = %10.8f  " % adc.P[n])
-        print_string += ("|  conv = %s" % conv[n])
+        print_string += f"|  conv = {conv[n]}"
         logger.info(adc, print_string)
 
     log.timer('ADC', *cput0)
@@ -162,10 +162,26 @@ class RADC(lib.StreamObject):
         self.P = None
         self.X = None
 
-        keys = set(('tol_residual','conv_tol', 'e_corr', 'method', 'mo_coeff',
-                    'mol', 'mo_energy', 'max_memory', 'incore_complete',
-                    'scf_energy', 'e_tot', 't1', 'frozen', 'chkfile',
-                    'max_space', 't2', 'mo_occ', 'max_cycle'))
+        keys = {
+            'tol_residual',
+            'conv_tol',
+            'e_corr',
+            'method',
+            'mo_coeff',
+            'mol',
+            'mo_energy',
+            'max_memory',
+            'incore_complete',
+            'scf_energy',
+            'e_tot',
+            't1',
+            'frozen',
+            'chkfile',
+            'max_space',
+            't2',
+            'mo_occ',
+            'max_cycle',
+        }
 
         self._keys = set(self.__dict__.keys()).union(keys)
 

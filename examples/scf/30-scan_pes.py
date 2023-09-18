@@ -4,6 +4,7 @@
 Scan HF/DFT PES.
 '''
 
+
 import numpy
 from pyscf import gto
 from pyscf import scf, dft
@@ -28,12 +29,15 @@ for b in numpy.arange(0.7, 4.01, 0.1):
 # initial guess.
 #
 mf_scanner = dft.RKS(mol).set(xc='b3lyp').as_scanner()
-ehf2 = []
-for b in reversed(numpy.arange(0.7, 4.01, 0.1)):
-    # Scanner supports to input the structure of a molecule than the Mole object
-    ehf2.append(mf_scanner([["F", (0., 0., 0.)],
-                            ["H", (0., 0., b)],]))
-
+ehf2 = [
+    mf_scanner(
+        [
+            ["F", (0.0, 0.0, 0.0)],
+            ["H", (0.0, 0.0, b)],
+        ]
+    )
+    for b in reversed(numpy.arange(0.7, 4.01, 0.1))
+]
 x = numpy.arange(0.7, 4.01, .1)
 ehf2.reverse()
 with open('hf-scan.txt', 'w') as fout:

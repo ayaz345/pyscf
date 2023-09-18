@@ -14,6 +14,7 @@ non-periodic direction.
 
 '''
 
+
 import time
 from pyscf.pbc import df as pdf
 from pyscf.pbc import gto as pbcgto
@@ -26,8 +27,6 @@ a = 1.42 # bond length in graphene
 fft_ke_cut = 300
 # Much smaller mesh needed for AFTDF with the setting cell.low_dim_ft_type='inf_vacuum'
 aft_mesh = [30,30,40]
-e = []
-t = []
 pseudo = 'gth-pade'
 
 ##################################################
@@ -51,9 +50,8 @@ mf = pbchf.KRHF(cell)
 mf.with_df = pdf.AFTDF(cell)
 mf.kpts = cell.make_kpts(kpts)
 mf.conv_tol = 1e-6
-e.append(mf.kernel())
-t.append(time.time() - t0)
-
+e = [mf.kernel()]
+t = [time.time() - t0]
 ##################################################
 #
 # 2D PBC with FFT

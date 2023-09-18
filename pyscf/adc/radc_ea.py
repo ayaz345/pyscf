@@ -309,7 +309,6 @@ def get_diag(adc,M_ab=None,eris=None):
     e_occ = adc.mo_energy[:nocc]
     e_vir = adc.mo_energy[nocc:]
 
-    s1 = 0
     f1 = n_singles
     s2 = f1
     f2 = s2 + n_doubles
@@ -324,7 +323,7 @@ def get_diag(adc,M_ab=None,eris=None):
     # Compute precond in p1-p1 block
 
     M_ab_diag = np.diagonal(M_ab)
-    diag[s1:f1] = M_ab_diag.copy()
+    diag[:f1] = M_ab_diag.copy()
 
     # Compute precond in 2p1h-2p1h block
 
@@ -455,7 +454,7 @@ def matvec(adc, M_ab=None, eris=None):
 
 ############### ADC(3) iab - jcd block ############################
 
-        if (method == "adc(2)-x" or method == "adc(3)"):
+        if method in ["adc(2)-x", "adc(3)"]:
 
             eris_oovv = eris.oovv
             eris_ovvo = eris.ovvo
@@ -638,8 +637,7 @@ def get_trans_moments(adc):
         T_a = get_trans_moments_orbital(adc,orb)
         T.append(T_a)
 
-    T = np.array(T)
-    return T
+    return np.array(T)
 
 
 def get_trans_moments_orbital(adc, orb):
@@ -779,9 +777,7 @@ def analyze_eigenvector(adc):
         doubles_idx = []
         singles_val = []
         doubles_val = []
-        iter_num = 0
-
-        for orb_idx in ind_idx:
+        for iter_num, orb_idx in enumerate(ind_idx):
 
             if orb_idx < n_singles:
                 a_idx = orb_idx + 1 + nocc
@@ -796,8 +792,6 @@ def analyze_eigenvector(adc):
                 b_idx = ab_rem % nvir
                 doubles_idx.append((i_idx + 1, a_idx + 1 + nocc, b_idx + 1 + nocc))
                 doubles_val.append(U_sorted[iter_num])
-
-            iter_num += 1
 
         logger.info(adc, '%s | root %d | norm(1p)  = %6.4f | norm(1h2p) = %6.4f ',
                     adc.method ,I, U1dotU1, U2dotU2)
@@ -922,9 +916,7 @@ def compute_dyson_mo(myadc):
         P,X = myadc.get_properties(nroots)
 
     nroots = X.shape[1]
-    dyson_mo = np.dot(myadc.mo_coeff,X)
-
-    return dyson_mo
+    return np.dot(myadc.mo_coeff,X)
 
 
 class RADCEA(radc.RADC):

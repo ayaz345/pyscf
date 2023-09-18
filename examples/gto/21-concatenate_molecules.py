@@ -44,7 +44,7 @@ for i in range(mol1.nbas):
         s12[pi:pi+di,pj:pj+dj] = buf
         pj += dj
     pi += di
-print('<mol1|mol2> overlap shape %s' % str(s12.shape))
+print(f'<mol1|mol2> overlap shape {str(s12.shape)}')
 
 #
 # 3-center and 2-center 2e integrals for density fitting

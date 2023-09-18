@@ -70,14 +70,18 @@ def kernel(adc, nroots=1, guess=None, eris=None, verbose=None):
     logger.info(adc, header)
 
     if nfalse >= 1:
-        logger.warn(adc, "Davidson iterations for " + str(nfalse) + " root(s) not converged\n")
+        logger.warn(
+            adc,
+            f"Davidson iterations for {str(nfalse)}"
+            + " root(s) not converged\n",
+        )
 
     for n in range(nroots):
         print_string = ('%s root %d  |  Energy (Eh) = %14.10f  |  Energy (eV) = %12.8f  ' %
                         (adc.method, n, adc.E[n], adc.E[n]*27.2114))
         if adc.compute_properties:
             print_string += ("|  Spec factors = %10.8f  " % adc.P[n])
-        print_string += ("|  conv = %s" % conv[n])
+        print_string += f"|  conv = {conv[n]}"
         logger.info(adc, print_string)
 
     log.timer('ADC', *cput0)
@@ -166,11 +170,27 @@ class UADC(lib.StreamObject):
         self.X = (None,)
         self.ncvs = None
 
-        keys = set(('tol_residual','conv_tol', 'e_corr', 'method',
-                    'method_type', 'mo_coeff', 'mol', 'mo_energy_b',
-                    'max_memory', 'scf_energy', 'e_tot', 't1', 'frozen',
-                    'mo_energy_a', 'chkfile', 'max_space', 't2', 'mo_occ',
-                    'max_cycle'))
+        keys = {
+            'tol_residual',
+            'conv_tol',
+            'e_corr',
+            'method',
+            'method_type',
+            'mo_coeff',
+            'mol',
+            'mo_energy_b',
+            'max_memory',
+            'scf_energy',
+            'e_tot',
+            't1',
+            'frozen',
+            'mo_energy_a',
+            'chkfile',
+            'max_space',
+            't2',
+            'mo_occ',
+            'max_cycle',
+        }
 
         self._keys = set(self.__dict__.keys()).union(keys)
 

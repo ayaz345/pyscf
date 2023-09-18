@@ -51,7 +51,7 @@ while end < xyz_range.size:
 
     calcs = xyz_range[start:end]
     include = ["calc_polarizability.py"]
-    for i, xyz in enumerate(calcs[0:calcs.shape[0]]):
+    for xyz in calcs[:calcs.shape[0]]:
         if xyz < 10:
             num = "00000{0}".format(xyz)
         elif xyz < 100:
@@ -62,15 +62,15 @@ while end < xyz_range.size:
             num = "00{0}".format(xyz)
         else:
             raise ValueError("xyz too large?? {0}".format(xyz))
-        include.append("calc_"+num)
+        include.append(f"calc_{num}")
 
     fcalc = calcs[0]
     ecalc = calcs[calcs.shape[0]-1]+25
 
     lines = script
     for files in include:
-        lines += "cp -r " + files + " $LSCRATCH_DIR\n"
-        
+        lines += f"cp -r {files}" + " $LSCRATCH_DIR\n"
+
     lines += "cd $LSCRATCH_DIR\n"
     lines += "./calc_polarizability.py --np ${NPROCS} " + "--start {0} --end {1} >& calc_{0}to{1}.out\n".format(fcalc, ecalc)
 
@@ -78,10 +78,9 @@ while end < xyz_range.size:
     lines += "mkdir -p $RESULTS_DIR\n"
     lines += "cp -r * $RESULTS_DIR\n"
     fname = "run.calc_C60_{0}to_{1}.sh".format(fcalc, ecalc)
-    f = open(fname, "w")
-    f.write(lines) # write bash script
-    f.close()
+    with open(fname, "w") as f:
+        f.write(lines) # write bash script
     start = end
-    
+
     # submit job to Torque
-    subprocess.call("qsub " + fname, shell=True)
+    subprocess.call(f"qsub {fname}", shell=True)

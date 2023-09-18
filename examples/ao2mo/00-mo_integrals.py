@@ -21,8 +21,9 @@ myhf.kernel()
 
 orb = myhf.mo_coeff
 eri_4fold = ao2mo.kernel(mol, orb)
-print('MO integrals (ij|kl) with 4-fold symmetry i>=j, k>=l have shape %s' %
-      str(eri_4fold.shape))
+print(
+    f'MO integrals (ij|kl) with 4-fold symmetry i>=j, k>=l have shape {str(eri_4fold.shape)}'
+)
 
 
 #

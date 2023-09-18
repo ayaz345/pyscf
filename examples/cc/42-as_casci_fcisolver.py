@@ -36,8 +36,7 @@ class AsFCISolver(object):
 
     def make_rdm1(self, fake_ci, norb, nelec):
         t1, t2, l1, l2 = fake_ci.cc_amplitues
-        dm1 = self.mycc.make_rdm1(t1, t2, l1, l2, ao_repr=True)
-        return dm1
+        return self.mycc.make_rdm1(t1, t2, l1, l2, ao_repr=True)
 
     def make_rdm12(self, fake_ci, norb, nelec):
         t1, t2, l1, l2 = fake_ci.cc_amplitues

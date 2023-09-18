@@ -35,6 +35,12 @@ for z, atm in atoms.items():
     mf1.run()
     counts[z] = (mf._cycle, mf.e_tot, mf1._cycle, mf1.e_tot)
 
-print('E(NRSRHF) is lower in %d samples' % sum([(v[1] - v[3] < 1e-7) for v in counts.values()]))
-print('E(NRSRHF) is higher in %d samples' % sum([(v[1] - v[3] > 1e-7) for v in counts.values()]))
+print(
+    'E(NRSRHF) is lower in %d samples'
+    % sum(v[1] - v[3] < 1e-7 for v in counts.values())
+)
+print(
+    'E(NRSRHF) is higher in %d samples'
+    % sum(v[1] - v[3] > 1e-7 for v in counts.values())
+)
 

@@ -32,8 +32,7 @@ def make_rdm1_t2s(bra, ket, norb, nelec_ket):
     for str0, tab in enumerate(ades_index):
         for _, i, str1, sign in tab:
             t1bra[str1,:,i] += sign * bra[str0,:]
-    dm1 = np.einsum('abp,abq->pq', t1bra, t1ket)
-    return dm1
+    return np.einsum('abp,abq->pq', t1bra, t1ket)
 
 # <S|i_beta^+ j_alpha|T>
 def make_rdm1_s2t(bra, ket, norb, nelec_ket):
@@ -57,8 +56,7 @@ def make_rdm1_s2t(bra, ket, norb, nelec_ket):
     for str0, tab in enumerate(bcre_index):
         for a, _, str1, sign in tab:
             t1bra[:,str1,a] += sign * t1ket[:,str0]
-    dm1 = np.einsum('ab,abpq->pq', bra, t1bra)
-    return dm1
+    return np.einsum('ab,abpq->pq', bra, t1bra)
 
 
 if __name__ == '__main__':

@@ -7,6 +7,7 @@
 CCSD and CCSD(T) density matrices
 '''
 
+
 import numpy
 from pyscf import gto, scf, cc, ao2mo
 
@@ -32,7 +33,7 @@ E = numpy.einsum('pq,qp', h1, dm1)
 # Note dm2 is transposed to simplify its contraction to integrals
 E+= numpy.einsum('pqrs,pqrs', eri, dm2) * .5
 E+= mol.energy_nuc()
-print('E(CCSD) = %s, reference %s' % (E, mycc.e_tot))
+print(f'E(CCSD) = {E}, reference {mycc.e_tot}')
 
 
 # When plotting CCSD density on grids, CCSD density matrices need to be

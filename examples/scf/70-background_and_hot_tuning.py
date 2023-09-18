@@ -7,6 +7,7 @@
 Put SCF calculation in the background.  Tune the SCF solver at runtime.
 '''
 
+
 import time
 from pyscf import gto, scf, lib
 
@@ -46,5 +47,5 @@ from pyscf.tools import molden
 molden.from_scf(mf, 'unconverged_scf.molden')
 print('\n ** Write SCF intemediates to molden file\n')
 e_scf = b.get()
-print('E(HF) = %s ' % e_scf)
+print(f'E(HF) = {e_scf} ')
 
